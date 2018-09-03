@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>被踩白块</title>
+		<link rel="stylesheet" href="css/frame.css" />
+	</head>
+	<body>
+		<div id="frame">
+			<div id="frame-content">
+				
+			</div>
+			<div id="canvasb">
+			 任意键开始
+		    </div>
+		</div>
+		
+		<div id="result">
+			
+		</div>
+		
+		<div id="close">
+			<div>
+				
+			</div>
+			<div>
+				<input type="button" name="but" value="重新游戏">
+			</div>
+		</div>
+		<script>
+		/*alert("测试JavaScript");*/
+		/*布置页面*/
+			var content=document.getElementById("frame-content");
+			for(var i=0;i<25;i++){
+				var childs=document.createElement("div");
+				    childs.setAttribute("class","tr")
+				    content.appendChild(childs)
+			}
+			var chs=content.children;
+			var blacks=new Array();
+			for(var i=0;i<chs.length;i++){
+				var n=(Math.floor(Math.random()*5))%4;
+			    /*console.log(n);*/
+				for(var j=0;j<4;j++){
+					ch=document.createElement("div");
+					if(j==n){
+						ch.setAttribute("class","block blackblock");
+					}else{
+					    ch.setAttribute("class","block");
+					}
+					chs[i].appendChild(ch);
+				}
+			}
+			
+			
+			
+			/*自动移动*/
+			var k=-0;
+			var time=600;
+			var tout=0;
+			function onstart(){
+				if(k==-1900){
+					return;
+				}
+				content.style.bottom=k+'px';
+				k-=10;
+				tout+=5;
+				setTimeout("onstart()",time-tout);
+				
+			}
+			
+			
+			var count=0;
+			
+			document.getElementById("frame").onclick=function (e){
+				/*alert("单击");*/
+				var t=e.target;
+				if(t.getAttribute("id")=="canvasb"){
+					/*alert("开始");*/
+					document.getElementById("canvasb").setAttribute("style","display: none;");
+					document.getElementById("result").setAttribute("style","display: flex;");
+					document.getElementById("result").innerHTML=count;
+					setTimeout("onstart()",time);
+					movecheck();
+					return;
+				}
+				
+				if(t.getAttribute("class")=="block blackblock"){
+					
+					
+					if(!checkclose(t.parentElement.nextElementSibling)){
+						clo();
+						return;
+					}
+					count+=1;
+					t.removeAttribute("class");
+					t.setAttribute("class","block checked");
+					document.getElementById("result").innerHTML=count;
+					return;
+				}else{
+					clo();
+				}
+			}
+			
+			
+			/*结束*/
+			function clo(){
+				document.getElementById("canvasb").setAttribute("style","display: flex;");
+					document.getElementById("result").setAttribute("style","display: none;");
+				document.getElementById("close").setAttribute("style","display: flex;")
+				document.getElementById("close").children[0].innerHTML="猪八戒得分："+count;
+				
+			}
+			
+			/*重新游戏*/
+			document.getElementById("close").onclick=function(e){
+				/*alert("测试是否单击");*/
+				var t=e.target;
+				if(t.tagName.toLocaleLowerCase()=="input"){
+					
+					location.reload();
+				}
+			}
+			
+			/*自动移动判断是否结束游戏*/
+			function checkclose(young){
+				if(young!=null){
+				var chs= young.children;
+	               	for(var i=0;i<chs.length;i++){
+	               		if(chs[i].getAttribute("class")=="block checked"){
+	               			return true;
+	               		}
+	               	}
+	               	return false;
+	            }
+				return true;
+			}
+			
+			function movecheck(){
+				var bot=content.style.bottom;
+			/*	console.log(bot);*/
+				var botnum=parseInt(bot.substr(1,bot.indexOf("px")));
+			    var n=botnum/100;
+			    if(!isNaN(n)&&n>1){
+			    	
+			    var t=content.children[Math.floor(n)].children;
+			     /*console.log(t)*/
+				    var flag=false;
+				    for(var i=0;i<t.length;i++){
+		               		if(chs[i].getAttribute("class")=="block checked"){
+		               			flag= true;
+		               			break;
+		               		}
+		               	}
+				    if(!flag){
+				    	clo();
+				    	return;
+				    }
+			    }
+			    setTimeout("movecheck()",400);
+			}
+		</script>
+	</body>
+</html>
