@@ -2,10 +2,8 @@
 	margin: 0 auto;
 	display: flex;
 	justify-content: center;
-	display: flex;
-	justify-content: center;
 	align-items: center;
-	
+	width:400px;
 }
 #frame{
 	width: 400px;
